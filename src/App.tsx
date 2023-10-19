@@ -1,31 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route,} from 'react-router-dom';
+import SideMenu from './components/SideMenu';
 
-function App() {
-  const [count, setCount] = useState(0)
+const Home: React.FC = () => <h1>Home</h1>;
+const TaskList: React.FC = () => <h1>Task List</h1>;
+const TaskProgress: React.FC = () => <h1>Task Progress</h1>;
 
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div style={{ display: 'flex' }}>
+        <SideMenu />
+        <div style={{ marginLeft: '-20px', padding: '20px' }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="task-list" element={<TaskList />} />
+            <Route path="task-progress" element={<TaskProgress />} />
+          </Routes>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
-  )
-}
+    </Router>
+  );
+};
 
-export default App
+export default App;
