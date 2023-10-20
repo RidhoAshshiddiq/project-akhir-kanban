@@ -1,14 +1,18 @@
-import { useRecoilValue } from 'recoil'
-import { completedTasksSelector, uncompletedTasksSelector,} from '../tasks/TaskSelectors'
-import type { Task, CSSProperties } from '../.././types'
-import { Link } from 'react-router-dom'
+import { useRecoilValue } from 'recoil';
+import {
+  completedTasksSelector,
+  notStartedTasksSelector,
+  inProgressTasksSelector,
+  waitingTasksSelector,
+} from '../tasks/TaskSelectors';
+import type { Task, CSSProperties } from '../.././types';
+import { Link } from 'react-router-dom';
 
 const TaskSummary = (): JSX.Element => {
-    const completedTasks =
-    useRecoilValue<Task[]>(completedTasksSelector)
-
-  const uncompletedTasks =
-    useRecoilValue<Task[]>(uncompletedTasksSelector)
+  const completedTasks = useRecoilValue<Task[]>(completedTasksSelector);
+  const notStartedTasks = useRecoilValue<Task[]>(notStartedTasksSelector);
+  const inProgressTasks = useRecoilValue<Task[]>(inProgressTasksSelector);
+  const waitingTasks = useRecoilValue<Task[]>(waitingTasksSelector);
 
   return (
     <div style={styles.container}>
@@ -23,8 +27,29 @@ const TaskSummary = (): JSX.Element => {
       <div style={styles.list}>
         <span className="material-icons">list</span>
         <h2>
-          You still have {uncompletedTasks.length}{' '}
-          {uncompletedTasks.length <= 1 ? 'task' : 'tasks'} left
+          You still have {notStartedTasks.length + inProgressTasks.length + waitingTasks.length}{' '}
+          {notStartedTasks.length + inProgressTasks.length + waitingTasks.length <= 1 ? 'task' : 'tasks'} left
+        </h2>
+      </div>
+      <div style={styles.list}>
+        <span className="material-icons">arrow_right</span>
+        <h2>
+          Not Started: {notStartedTasks.length}{' '}
+          {notStartedTasks.length <= 1 ? 'task' : 'tasks'}
+        </h2>
+      </div>
+      <div style={styles.list}>
+        <span className="material-icons">arrow_right</span>
+        <h2>
+          In Progress: {inProgressTasks.length}{' '}
+          {inProgressTasks.length <= 1 ? 'task' : 'tasks'}
+        </h2>
+      </div>
+      <div style={styles.list}>
+        <span className="material-icons">arrow_right</span>
+        <h2>
+          Waiting/In Review: {waitingTasks.length}{' '}
+          {waitingTasks.length <= 1 ? 'task' : 'tasks'}
         </h2>
       </div>
       <div style={styles.links}>
@@ -36,8 +61,9 @@ const TaskSummary = (): JSX.Element => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
+
 
 const styles: CSSProperties = {
   container: {
