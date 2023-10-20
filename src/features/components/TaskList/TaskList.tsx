@@ -62,18 +62,25 @@ const styles: CSSProperties = {
   tableHeaderTaskName: {
     padding: '16px',
     width: '25%',
+    textAlign: 'center',
   },
   tableHeaderDetail: {
     padding: '16px',
     width: '30%',
+    textAlign: 'center',
   },
   tableHeaderDueDate: {
     padding: '16px',
     width: '10%',
+    marginLeft: '60px',
+    textAlign: 'center',
   },
   tableHeaderProgress: {
     padding: '16px',
     width: '15%',
+    marginLeft: '35px',
+    textAlign: 'center'
+    
   },
 }
 
