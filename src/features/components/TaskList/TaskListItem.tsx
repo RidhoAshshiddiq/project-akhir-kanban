@@ -40,17 +40,18 @@ const getProgressCategory = (progressOrder: number): string => {
 };
 
 const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
-  const { completeTask } = useTasksAction();
+  
+  const { completeTask} = useTasksAction();
 
   return (
     <div style={styles.tableBody}>
       <div style={styles.taskTitleContainer}>
         <span
-          className="material-icons"
-          style={getIconStyle(task.progressOrder)}
-          onClick={() => {
-            completeTask(task.id);
-          }}
+           className="material-icons"
+           style={getIconStyle(task.progressOrder)}
+           onClick={() => {
+             completeTask(task.id)
+           }}
         >
           check_circle
         </span>

@@ -1,48 +1,55 @@
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue } from 'recoil';
+import TaskColumn from './TaskColumn';
+import type { Task, CSSProperties } from '../../../types';
+import { TASK_PROGRESS_STATUS } from '../../../constants/app';
+import { useTasksAction } from '../../hooks/Tasks';
 import {
-  notStartedTasksSelector,
-  inProgressTasksSelector,
-  waitingTasksSelector,
-  completedTasksSelector,
-} from '../../tasks/TaskSelectors'
-import TaskColumn from './TaskColumn'
-import type { Task, CSSProperties } from '../../../types'
-import {TASK_PROGRESS_STATUS} from '../../.././constants/app'
+  notStartedTasksState,
+  inProgressTasksState,
+  waitingTasksState,
+  completedTasksState,
+} from '../../tasks/TaskAtoms';
 
-const TaskProgress = (): JSX.Element => {
-  const notStartedTasks: Task[] = useRecoilValue(notStartedTasksSelector)
+const TaskProgress: React.FC = () => {
+  const notStartedTasks: Task[] = useRecoilValue(notStartedTasksState);
+  const inProgressTasks: Task[] = useRecoilValue(inProgressTasksState);
+  const waitingTasks: Task[] = useRecoilValue(waitingTasksState);
+  const completedTasks: Task[] = useRecoilValue(completedTasksState);
 
-  const inProgressTasks: Task[] = useRecoilValue(inProgressTasksSelector)
-
-  const waitingTasks: Task[] = useRecoilValue(waitingTasksSelector)
-
-  const completedTasks: Task[] = useRecoilValue(completedTasksSelector)
+  const { moveTaskCard, completeTask } = useTasksAction();
 
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Task Progress</h1>
       <div style={styles.taskCategories}>
-         {/* Raw string telah digantikan */}
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.NOT_STARTED}
           tasks={notStartedTasks}
+          moveTaskCard={moveTaskCard}
+          completeTask={completeTask}
         />
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.IN_PROGRESS}
           tasks={inProgressTasks}
+          moveTaskCard={moveTaskCard}
+          completeTask={completeTask}
         />
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.WAITING}
           tasks={waitingTasks}
+          moveTaskCard={moveTaskCard}
+          completeTask={completeTask}
         />
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.COMPLETED}
           tasks={completedTasks}
+          moveTaskCard={moveTaskCard}
+          completeTask={completeTask}
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const styles: CSSProperties = {
   container: {
@@ -60,3 +67,5 @@ const styles: CSSProperties = {
 }
 
 export default TaskProgress
+
+
