@@ -1,52 +1,37 @@
-import type { Task, CSSProperties } from '../../../types'
-import { TASK_PROGRESS_ID } from '../../.././constants/app'
-import { useRecoilState } from 'recoil'  // Ditambahkan
-import { tasksState } from '../../tasks/TaskAtoms'  // Ditambahkan
-
+import React from 'react';
+import type { Task, CSSProperties } from '../../../types';
+import { TASK_PROGRESS_ID } from '../../../constants/app';
 
 interface TaskCardProps {
-  task: Task
+  task: Task;
+  moveTaskCard: (taskId: number, directionNumber: 1 | -1) => void;
+  completeTask: (taskId: number) => void;
 }
 
-const getIconStyle = (progressOrder: number): React.CSSProperties => {
+const TaskCard = ({ task, moveTaskCard, completeTask }: TaskCardProps): JSX.Element => {
+  const getIconStyle = (progressOrder: number): React.CSSProperties => {
     const color: '#55C89F' | '#C5C5C5' =
-      progressOrder === TASK_PROGRESS_ID.COMPLETED ? '#55C89F' : '#C5C5C5'
-  
+      progressOrder === TASK_PROGRESS_ID.COMPLETED ? '#55C89F' : '#C5C5C5';
+
     const cursor: 'default' | 'pointer' =
-      progressOrder === TASK_PROGRESS_ID.COMPLETED ? 'default' : 'pointer'
-  
+      progressOrder === TASK_PROGRESS_ID.COMPLETED ? 'default' : 'pointer';
+
     return {
       color,
       cursor,
       fontSize: '28px',
-    }
-  }
+    };
+  };
 
-const getArrowPositionStyle = (progressOrder: number): React.CSSProperties => {
+  const getArrowPositionStyle = (progressOrder: number): React.CSSProperties => {
     const justifyContentValue: 'flex-end' | 'space-between' =
-    // Raw data telah digantikan
-    progressOrder === TASK_PROGRESS_ID.NOT_STARTED
-      ? 'flex-end'
-      : 'space-between'
-  return {
-    display: 'flex',
-    justifyContent: justifyContentValue,
-  }
-}
+      progressOrder === TASK_PROGRESS_ID.NOT_STARTED ? 'flex-end' : 'space-between';
+    return {
+      display: 'flex',
+      justifyContent: justifyContentValue,
+    };
+  };
 
-const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
-    // Ditambahkan
-  const [tasks, setTasks] = useRecoilState<Task[]>(tasksState)
-
-  // Definisikan function ini 
-  const completeTask = (taskId: number): void => {
-    const updatedTasks: Task[] = tasks.map((task) =>
-      task.id === taskId
-        ? { ...task, progressOrder: TASK_PROGRESS_ID.COMPLETED }
-        : task,
-    )
-    setTasks(updatedTasks)
-  }
   return (
     <div style={styles.taskCard}>
       <div style={styles.taskIcons}>
@@ -54,9 +39,9 @@ const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
           className="material-icons"
           style={getIconStyle(task.progressOrder)}
           onClick={(): void => {
-            completeTask(task.id) // Ditambahkan
+            completeTask(task.id);
           }}
-          >
+        >
           check_circle
         </div>
         <div className="material-icons" style={styles.menuIcon}>
@@ -71,17 +56,20 @@ const TaskCard = ({ task }: TaskCardProps): JSX.Element => {
         <p>Due on {task.dueDate}</p>
       </div>
       <div style={getArrowPositionStyle(task.progressOrder)}>
-        {/* Raw data telah digantikan */}
         {task.progressOrder !== TASK_PROGRESS_ID.NOT_STARTED && (
-          <button className="material-icons">chevron_left</button>
+          <button className="material-icons" onClick={() => moveTaskCard(task.id, -1)}>
+            chevron_left
+          </button>
         )}
         {task.progressOrder !== TASK_PROGRESS_ID.COMPLETED && (
-          <button className="material-icons">chevron_right</button>
+          <button className="material-icons" onClick={() => moveTaskCard(task.id, 1)}>
+            chevron_right
+          </button>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const styles: CSSProperties = {
   taskCard: {
@@ -110,3 +98,5 @@ const styles: CSSProperties = {
 }
 
 export default TaskCard
+
+

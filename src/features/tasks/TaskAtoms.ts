@@ -50,3 +50,24 @@ export const tasksState = atom<Task[]>({
     },
   ],
 })
+
+export const notStartedTasksState = atom<Task[]>({
+  key: AtomKeys.NOT_STARTED_TASKS,
+  default: [],
+});
+
+export const inProgressTasksState = atom<Task[]>({
+  key: AtomKeys.IN_PROGRESS_TASKS,
+  default: [],
+});
+
+export const waitingTasksState = atom<Task[]>({
+  key: AtomKeys.WAITING_TASKS,
+  default: [],
+});
+
+export const completedTasksState = atom<Task[]>({
+  key: AtomKeys.COMPLETED_TASKS,
+  default: [],
+});
+
