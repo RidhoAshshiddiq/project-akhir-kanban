@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import TaskColumn from './TaskColumn';
 import type { Task, CSSProperties } from '../../../types';
-import { TASK_PROGRESS_STATUS } from '../../../constants/app';
+import { TASK_PROGRESS_ID, TASK_PROGRESS_STATUS } from '../../../constants/app';
 import { useTasksAction } from '../../hooks/Tasks';
 import {
   notStartedTasksState,
@@ -17,6 +17,7 @@ const TaskProgress: React.FC = () => {
   const completedTasks: Task[] = useRecoilValue(completedTasksState);
 
   const { moveTaskCard, completeTask } = useTasksAction();
+  
 
   return (
     <div style={styles.container}>
@@ -27,24 +28,29 @@ const TaskProgress: React.FC = () => {
           tasks={notStartedTasks}
           moveTaskCard={moveTaskCard}
           completeTask={completeTask}
+          defaultProgressOrder={TASK_PROGRESS_ID.NOT_STARTED}
+          
         />
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.IN_PROGRESS}
           tasks={inProgressTasks}
           moveTaskCard={moveTaskCard}
           completeTask={completeTask}
+          defaultProgressOrder={TASK_PROGRESS_ID.IN_PROGRESS}
         />
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.WAITING}
           tasks={waitingTasks}
           moveTaskCard={moveTaskCard}
           completeTask={completeTask}
+          defaultProgressOrder={TASK_PROGRESS_ID.WAITING}
         />
         <TaskColumn
           columnTitle={TASK_PROGRESS_STATUS.COMPLETED}
           tasks={completedTasks}
           moveTaskCard={moveTaskCard}
           completeTask={completeTask}
+          defaultProgressOrder={TASK_PROGRESS_ID.COMPLETED}
         />
       </div>
     </div>
