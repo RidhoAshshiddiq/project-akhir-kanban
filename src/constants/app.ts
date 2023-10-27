@@ -11,3 +11,9 @@ export const TASK_PROGRESS_STATUS = {
     WAITING: 3,
     COMPLETED: 4,
   }
+
+  // Ditambahkan
+export const TASK_MODAL_TYPE = {
+  ADD: 'add',
+  EDIT: 'edit',
+}
