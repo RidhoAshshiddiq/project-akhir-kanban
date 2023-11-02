@@ -5,12 +5,15 @@ import TaskListItem from './TaskListItem'
 import type { Task, CSSProperties } from '../../../types'
 import TaskModal from '../../components/shared/TaskModal' //Ditambahkan
 import { TASK_PROGRESS_ID, TASK_MODAL_TYPE} from '../../../constants/app' // Ditambahkan
+import { useTasksAction } from '../../hooks/Tasks'; // Ditambahkan
 
 const TaskList = (): JSX.Element => {
   const tasks: Task[] = useRecoilValue(tasksState)
+  const { editTask } = useTasksAction(); // Ditambahkan
   
   // Ditambahkan
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false) 
+
 
   return (
     <div style={styles.container}>
@@ -42,11 +45,19 @@ const TaskList = (): JSX.Element => {
       {isModalOpen && (
         <TaskModal
           headingTitle="Add your task"
-          type={TASK_MODAL_TYPE.ADD} // Ditambahkan
+          type={TASK_MODAL_TYPE.ADD}
           setIsModalOpen={setIsModalOpen}
           defaultProgressOrder={TASK_PROGRESS_ID.NOT_STARTED}
-        />
-      )}
+          editTask={(newTitle, newDetail, newDueDate, newProgressOrder) => {
+          // Di sini, Anda dapat mengganti taskId dengan cara mengidentifikasi task secara langsung
+          // Misalnya, dengan mencari task berdasarkan newTitle atau parameter lainnya.
+          const taskToEdit = tasks.find((task) => task.title === newTitle);
+          if (taskToEdit) {
+        editTask(taskToEdit.id, newTitle, newDetail, newDueDate, newProgressOrder);
+      }
+    }}
+  />
+)}
     </div>
   )
 }

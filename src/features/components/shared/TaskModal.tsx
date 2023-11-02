@@ -1,20 +1,42 @@
-import type { Dispatch, SetStateAction } from 'react'
-import type { CSSProperties } from '../../../types'
-import TaskForm from './TaskForm'
+
+import type { Dispatch, SetStateAction } from 'react';
+import type { Task, CSSProperties } from '../../../types';
+import TaskForm from './TaskForm';
 
 interface TaskModalProps {
-  headingTitle: string
-  type: string // Ditambahkan
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>
-  defaultProgressOrder: number
+  headingTitle: string;
+  type: string;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  defaultProgressOrder: number;
+  task?: Task;
+  editTask: (
+    newTitle: string,
+    newDetail: string,
+    newDueDate: string,
+    newProgressOrder: number
+  ) => void;
 }
 
 const TaskModal = ({
   headingTitle,
-  type, // Ditambahkan
+  type,
   setIsModalOpen,
   defaultProgressOrder,
+  task,
+  editTask,
 }: TaskModalProps): JSX.Element => {
+  const handleFormSubmit = (
+    newTitle: string,
+    newDetail: string,
+    newDueDate: string,
+    newProgressOrder: number
+  ): void => {
+    if (task) {
+      editTask(newTitle, newDetail, newDueDate, newProgressOrder);
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.modalTop}>
@@ -22,21 +44,24 @@ const TaskModal = ({
         <span
           className="material-icons"
           style={styles.icon}
-          onClick={(): void => {
-            setIsModalOpen(false)
+          onClick={() => {
+            setIsModalOpen(false);
           }}
         >
           close
         </span>
       </div>
-      <TaskForm 
-        type={type} // Ditambahkan
+      <TaskForm
+        type={type}
         defaultProgressOrder={defaultProgressOrder}
-        setIsModalOpen={setIsModalOpen} // Ditambahkan
-       />
+        setIsModalOpen={setIsModalOpen}
+        task={task}
+        onSubmit={handleFormSubmit}
+      />
     </div>
-  )
-}
+  );
+};
+
 
 const styles: CSSProperties = {
   container: {

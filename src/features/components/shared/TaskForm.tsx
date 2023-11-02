@@ -1,38 +1,67 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   TASK_PROGRESS_ID,
   TASK_PROGRESS_STATUS,
   TASK_MODAL_TYPE, // Ditambahkan
 } from '../../../constants/app'
-import type { CSSProperties } from '../../../types'
+import type { Task, CSSProperties } from '../../../types'
 import { useTasksAction } from '../../hooks/Tasks' // Ditambahkan
 import type { Dispatch, SetStateAction } from 'react' // Ditambahkan
+
 
 
 interface TaskFormProps {
     type: string // Ditambahkan
     defaultProgressOrder: number
     setIsModalOpen: Dispatch<SetStateAction<boolean>> // Ditambahkan
+    task?: Task; // Ditambahkan
+    onSubmit: (
+      newTitle: string,
+      newDetail: string,
+      newDueDate: string,
+      newProgressOrder: number
+    ) => void; // Tambahkan properti onSubmit
 }
 
-const TaskForm = ({ type , defaultProgressOrder, setIsModalOpen  }: TaskFormProps): JSX.Element => {
-  const [title, setTitle] = useState<string>('')
-  const [detail, setDetail] = useState<string>('')
-  const [dueDate, setDueDate] = useState<string>('')
-  const [progressOrder, setProgressOrder] = useState<number>(
-    defaultProgressOrder,
-  )
+const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormProps): JSX.Element => {
+    const [title, setTitle] = useState<string>(task?.title || ''); // Ditambahkan
+    const [detail, setDetail] = useState<string>(task?.detail || ''); // Ditambahkan
+    const [dueDate, setDueDate] = useState<string>(task?.dueDate || ''); // Ditambahkan
+    const [progressOrder, setProgressOrder] = useState<number>(
+      task?.progressOrder || defaultProgressOrder,
+    ); // Ditambahkan
+  
+  
+      useEffect(() => {
+        if (task) {
+          setTitle(task.title);
+          setDetail(task.detail);
+          setDueDate(task.dueDate);
+          setProgressOrder(task.progressOrder);
+        } else {
+          // Set nilai awal jika task undefined (mis. untuk tambah task)
+          setTitle('');
+          setDetail('');
+          setDueDate('');
+          setProgressOrder(defaultProgressOrder);
+        }
+      }, [task, defaultProgressOrder]);
 
    // Ditambahkan
-  const { addTask } = useTasksAction()
+  const { addTask, editTask } = useTasksAction()
 
   // Definisikan function ini
   const handleSubmit = (): void => {
     if (type === TASK_MODAL_TYPE.ADD) {
-      addTask(title, detail, dueDate, progressOrder) // Ditambahkan
-      setIsModalOpen(false) // Ditambahkan
-    }
-  }
+        addTask(title, detail, dueDate, progressOrder);
+      } else if (type === TASK_MODAL_TYPE.EDIT && task) {
+        // Jika ini adalah modal edit
+        editTask(task.id, title, detail, dueDate, progressOrder);
+      }
+      setIsModalOpen(false);
+    };
+
+    
 
   return (
     <form style={styles.form}>
