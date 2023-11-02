@@ -3,6 +3,7 @@ import type { Task, CSSProperties } from '../../../types';
 import { useState } from 'react' // useState ditambahkan
 import TaskModal from '../../components/shared/TaskModal' //Ditambahkan
 import {TASK_PROGRESS_ID, TASK_MODAL_TYPE} from '../../../constants/app' // Ditambahkan
+import { useTasksAction } from '../../hooks/Tasks'; // Ditambahkan
 
 interface TaskColumnProps {
   columnTitle: string;
@@ -16,6 +17,7 @@ interface TaskColumnProps {
 
 const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, moveTaskCard, completeTask, defaultProgressOrder }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false) 
+  const { editTask } = useTasksAction(); // Ditambahkan
 
   return (
     <div style={styles.categoryColumn}>
@@ -43,7 +45,15 @@ const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, moveTaskCar
           type={TASK_MODAL_TYPE.ADD} // Ditambahkan
           setIsModalOpen={setIsModalOpen}
           defaultProgressOrder={defaultProgressOrder}
-        />
+          editTask={(newTitle, newDetail, newDueDate, newProgressOrder) => {
+            // Di sini, Anda dapat mengganti taskId dengan cara mengidentifikasi task secara langsung
+            // Misalnya, dengan mencari task berdasarkan newTitle atau parameter lainnya.
+            const taskToEdit = tasks.find((task) => task.title === newTitle);
+            if (taskToEdit) {
+          editTask(taskToEdit.id, newTitle, newDetail, newDueDate, newProgressOrder);
+        }
+      }}
+      />
       )}
     </div>
   );

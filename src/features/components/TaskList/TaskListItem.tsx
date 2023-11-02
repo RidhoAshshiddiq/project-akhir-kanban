@@ -4,6 +4,11 @@ import {
   TASK_PROGRESS_ID,
 } from '../../../constants/app';
 import { useTasksAction } from '../../hooks/Tasks';
+import { useState } from 'react';
+import TaskMenu from '../../components/shared/TaskMenu';
+import TaskModal from '../../components/shared/TaskModal'; //Ditambahkan
+import { TASK_MODAL_TYPE } from '../../../constants/app'; //Ditambahkan
+
 
 interface TaskListItemProps {
   task: Task;
@@ -40,18 +45,43 @@ const getProgressCategory = (progressOrder: number): string => {
 };
 
 const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
-  
-  const { completeTask} = useTasksAction();
+  const { completeTask, editTask, deleteTask } = useTasksAction();
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState<boolean>(false);
+
+
+  const handleCompleteTask = (): void => {
+    if (!isMenuOpen) {
+      completeTask(task.id);
+    }
+  };
+
+  const handleEditTask = (
+    newTitle: string,
+    newDetail: string,
+    newDueDate: string,
+    newProgressOrder: number
+  ): void => {
+    if (task.id) {
+      editTask(task.id, newTitle, newDetail, newDueDate, newProgressOrder);
+      setIsMenuOpen(false);
+      setIsEditFormOpen(false);
+    }
+  };
+
+  const handleDeleteTask = (): void => {
+    // Lakukan operasi sebelum menghapus jika diperlukan
+    deleteTask(task.id);
+    setIsMenuOpen(false); // Tutup menu setelah penghapusan
+  };
 
   return (
     <div style={styles.tableBody}>
       <div style={styles.taskTitleContainer}>
         <span
-           className="material-icons"
-           style={getIconStyle(task.progressOrder)}
-           onClick={() => {
-             completeTask(task.id)
-           }}
+          className="material-icons"
+          style={getIconStyle(task.progressOrder)}
+          onClick={handleCompleteTask}
         >
           check_circle
         </span>
@@ -59,12 +89,45 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
       </div>
       <div style={styles.tableBodyDetail}>{task.detail}</div>
       <div style={styles.tableBodyDueDate}>{task.dueDate}</div>
-      <div style={styles.tableBodyProgress}>{getProgressCategory(task.progressOrder)}</div>
+      <div style={styles.tableBodyProgress}>
+        {getProgressCategory(task.progressOrder)}
+      </div>
       <div style={styles.menuIconContainer}>
-        <span className="material-icons" style={styles.menuIcon}>
+        <span
+          className="material-icons"
+          style={styles.menuIcon}
+          onClick={(): void => {
+            setIsMenuOpen(true);
+          }}
+        >
           more_horiz
         </span>
       </div>
+     {/* Ditambahkan */}
+     {isMenuOpen && (
+        // <TaskMenu setIsMenuOpen={setIsMenuOpen} task={task} />
+        <TaskMenu
+          setIsMenuOpen={setIsMenuOpen}
+          task={task}
+          initialTitle={task.title}
+          initialDetail={task.detail}
+          initialDueDate={task.dueDate}
+          initialProgressOrder={task.progressOrder}
+          editTask={handleEditTask}
+          deleteTask={handleDeleteTask} // Tambahkan ini
+          openEditForm={() => setIsEditFormOpen(true)} // Tambahkan ini untuk membuka form edit
+        />
+      )}
+      {isEditFormOpen && (
+        <TaskModal
+          headingTitle="Edit your task"
+          type={TASK_MODAL_TYPE.EDIT} // Ubah menjadi modal edit
+          setIsModalOpen={setIsEditFormOpen}
+          defaultProgressOrder={task.progressOrder}
+          task={task}
+          editTask={handleEditTask}
+        />
+      )}
     </div>
   );
 };

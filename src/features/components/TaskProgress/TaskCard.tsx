@@ -1,11 +1,17 @@
 import React from 'react';
 import type { Task, CSSProperties } from '../../../types';
 import { TASK_PROGRESS_ID } from '../../../constants/app';
+import { useState } from 'react'; // useState ditambahkan
+import TaskMenu from '../../components/shared/TaskMenu'; // Ditambahkan
+import { useTasksAction } from '../../hooks/Tasks';
+import TaskModal from '../../components/shared/TaskModal'; //Ditambahkan
+import { TASK_MODAL_TYPE } from '../../../constants/app'; //Ditambahkan
 
 interface TaskCardProps {
   task: Task;
   moveTaskCard: (taskId: number, directionNumber: 1 | -1) => void;
   completeTask: (taskId: number) => void;
+  
 }
 
 const TaskCard = ({ task, moveTaskCard, completeTask }: TaskCardProps): JSX.Element => {
@@ -32,19 +38,58 @@ const TaskCard = ({ task, moveTaskCard, completeTask }: TaskCardProps): JSX.Elem
     };
   };
 
+  // Ditambahkan
+
+  const {editTask} = useTasksAction();
+  const {deleteTask} = useTasksAction();
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
+  const [isEditFormOpen, setIsEditFormOpen] = useState<boolean>(false);
+
+
+
+  const handleCompleteTask = (): void => {
+    if (!isMenuOpen) {
+      completeTask(task.id);
+    }
+  }
+
+  const handleEditTask = (
+    newTitle: string,
+    newDetail: string,
+    newDueDate: string,
+    newProgressOrder: number
+  ): void => {
+    if (task.id) {
+      editTask(task.id, newTitle, newDetail, newDueDate, newProgressOrder);
+      setIsMenuOpen(false);
+      setIsEditFormOpen(false);
+    }
+  };
+
+  const handleDeleteTask = (): void => {
+    // Lakukan operasi sebelum menghapus jika diperlukan
+    deleteTask(task.id);
+    setIsMenuOpen(false); // Tutup menu setelah penghapusan
+  };
+  
+
   return (
     <div style={styles.taskCard}>
       <div style={styles.taskIcons}>
         <div
           className="material-icons"
           style={getIconStyle(task.progressOrder)}
-          onClick={(): void => {
-            completeTask(task.id);
-          }}
+          onClick={handleCompleteTask}
         >
           check_circle
         </div>
-        <div className="material-icons" style={styles.menuIcon}>
+        <div 
+          className="material-icons"
+          style={styles.menuIcon}
+          onClick={(): void => {
+          setIsMenuOpen(true) // Ditambahkan
+          }}
+          >
           more_vert
         </div>
       </div>
@@ -67,6 +112,31 @@ const TaskCard = ({ task, moveTaskCard, completeTask }: TaskCardProps): JSX.Elem
           </button>
         )}
       </div>
+      {/* Ditambahkan */}
+      {isMenuOpen && (
+        // <TaskMenu setIsMenuOpen={setIsMenuOpen} task={task} />
+        <TaskMenu
+          setIsMenuOpen={setIsMenuOpen}
+          task={task}
+          initialTitle={task.title}
+          initialDetail={task.detail}
+          initialDueDate={task.dueDate}
+          initialProgressOrder={task.progressOrder}
+          editTask={handleEditTask}
+          deleteTask={handleDeleteTask} // Tambahkan ini
+          openEditForm={() => setIsEditFormOpen(true)} // Tambahkan ini untuk membuka form edit
+        />
+      )}
+      {isEditFormOpen && (
+        <TaskModal
+          headingTitle="Edit your task"
+          type={TASK_MODAL_TYPE.EDIT} // Ubah menjadi modal edit
+          setIsModalOpen={setIsEditFormOpen}
+          defaultProgressOrder={task.progressOrder}
+          task={task}
+          editTask={handleEditTask}
+        />
+      )}
     </div>
   );
 };
