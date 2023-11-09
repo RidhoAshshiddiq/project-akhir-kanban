@@ -2,34 +2,34 @@ import { useState, useEffect } from 'react'
 import {
   TASK_PROGRESS_ID,
   TASK_PROGRESS_STATUS,
-  TASK_MODAL_TYPE, // Ditambahkan
+  TASK_MODAL_TYPE, 
 } from '../../../constants/app'
 import type { Task, CSSProperties } from '../../../types'
-import { useTasksAction } from '../../hooks/Tasks' // Ditambahkan
-import type { Dispatch, SetStateAction } from 'react' // Ditambahkan
+import { useTasksAction } from '../../hooks/Tasks' 
+import type { Dispatch, SetStateAction } from 'react' 
 
 
 
 interface TaskFormProps {
-    type: string // Ditambahkan
+    type: string 
     defaultProgressOrder: number
-    setIsModalOpen: Dispatch<SetStateAction<boolean>> // Ditambahkan
-    task?: Task; // Ditambahkan
+    setIsModalOpen: Dispatch<SetStateAction<boolean>> 
+    task?: Task; 
     onSubmit: (
       newTitle: string,
       newDetail: string,
       newDueDate: string,
       newProgressOrder: number
-    ) => void; // Tambahkan properti onSubmit
+    ) => void; 
 }
 
 const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormProps): JSX.Element => {
-    const [title, setTitle] = useState<string>(task?.title || ''); // Ditambahkan
-    const [detail, setDetail] = useState<string>(task?.detail || ''); // Ditambahkan
-    const [dueDate, setDueDate] = useState<string>(task?.dueDate || ''); // Ditambahkan
+    const [title, setTitle] = useState<string>(task?.title || ''); 
+    const [detail, setDetail] = useState<string>(task?.detail || ''); 
+    const [dueDate, setDueDate] = useState<string>(task?.dueDate || ''); 
     const [progressOrder, setProgressOrder] = useState<number>(
       task?.progressOrder || defaultProgressOrder,
-    ); // Ditambahkan
+    ); 
   
   
       useEffect(() => {
@@ -39,7 +39,6 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
           setDueDate(task.dueDate);
           setProgressOrder(task.progressOrder);
         } else {
-          // Set nilai awal jika task undefined (mis. untuk tambah task)
           setTitle('');
           setDetail('');
           setDueDate('');
@@ -47,15 +46,13 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
         }
       }, [task, defaultProgressOrder]);
 
-   // Ditambahkan
   const { addTask, editTask } = useTasksAction()
 
-  // Definisikan function ini
+  
   const handleSubmit = (): void => {
     if (type === TASK_MODAL_TYPE.ADD) {
         addTask(title, detail, dueDate, progressOrder);
       } else if (type === TASK_MODAL_TYPE.EDIT && task) {
-        // Jika ini adalah modal edit
         editTask(task.id, title, detail, dueDate, progressOrder);
       }
       setIsModalOpen(false);
@@ -66,9 +63,10 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
   return (
     <form style={styles.form}>
       <div style={styles.formItem}>
-        <label>Title：</label>
+      <label htmlFor="title">Title：</label>
         <input
           type="text"
+          id="title"
           value={title}
           onChange={(e): void => {
             setTitle(e.target.value)
@@ -77,8 +75,9 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
         />
       </div>
       <div style={styles.formItem}>
-        <label>Detail：</label>
+      <label htmlFor="detail">Detail：</label>
         <textarea
+          id="detail"
           value={detail}
           onChange={(e): void => {
             setDetail(e.target.value)
@@ -87,9 +86,10 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
         />
       </div>
       <div style={styles.formItem}>
-        <label>Due Date：</label>
+        <label htmlFor="dueDate">Due Date：</label>
         <input
           type="date"
+          id="dueDate"
           value={dueDate}
           onChange={(e): void => {
             setDueDate(e.target.value)
@@ -98,8 +98,9 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
         />
       </div>
       <div style={styles.formItem}>
-        <label>Progress：</label>
+        <label htmlFor="progress">Progress：</label>
         <select
+          id="progress"
           style={styles.formInput}
           defaultValue={progressOrder}
           onChange={(e): void => {
@@ -124,7 +125,7 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
         type="button"
         style={styles.button}
         onClick={(): void => {
-          handleSubmit() // Ditambahkan
+          handleSubmit() 
         }}
       >
         Submit

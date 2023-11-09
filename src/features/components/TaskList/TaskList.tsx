@@ -1,19 +1,71 @@
-import { useState } from 'react' // useState ditambahkan
+import { useState } from 'react' 
 import { useRecoilValue } from 'recoil'
 import { tasksState } from '../../tasks/TaskAtoms'
 import TaskListItem from './TaskListItem'
 import type { Task, CSSProperties } from '../../../types'
-import TaskModal from '../../components/shared/TaskModal' //Ditambahkan
-import { TASK_PROGRESS_ID, TASK_MODAL_TYPE} from '../../../constants/app' // Ditambahkan
-import { useTasksAction } from '../../hooks/Tasks'; // Ditambahkan
+import TaskModal from '../../components/shared/TaskModal' 
+import { TASK_PROGRESS_ID, TASK_MODAL_TYPE} from '../../../constants/app' 
+import { useTasksAction } from '../../hooks/Tasks'; 
+import TaskFilter from '../shared/TaskFilter'; // Import TaskFilter
 
 const TaskList = (): JSX.Element => {
   const tasks: Task[] = useRecoilValue(tasksState)
-  const { editTask } = useTasksAction(); // Ditambahkan
+  const { addTask, editTask } = useTasksAction(); 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [filterType, setFilterType] = useState<string>('all'); // Tambahkan state untuk filter
+  const [modalType, setModalType] = useState<string>(TASK_MODAL_TYPE.ADD);
+ 
   
-  // Ditambahkan
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false) 
+  const addTaskHandler = (
+    newTitle: string,
+    newDetail: string,
+    newDueDate: string,
+    newProgressOrder: number
+  ): void => {
+    const newTask: Task = {
+      id: tasks.length + 1,
+      title: newTitle,
+      detail: newDetail,
+      dueDate: newDueDate,
+      progressOrder: newProgressOrder,
+    };
 
+    const updatedTasks = [...tasks, newTask];
+    console.log('Updated Tasks:', updatedTasks);
+    console.log(addTask);
+    
+
+    // Setelah penambahan tugas baru, atur filterType ke 'all'
+    setFilterType('all');
+
+    addTask(newTitle, newDetail, newDueDate, newProgressOrder);
+  };
+
+  const applyFilterHandler = (selectedFilter: string): void => {
+    console.log('Applying Filter...', selectedFilter);
+    setFilterType(selectedFilter);
+    setIsModalOpen(false); // Tutup modal setelah menerapkan filter
+  };
+  
+  const editTaskHandler = (
+    newTitle: string,
+    newDetail: string,
+    newDueDate: string,
+    newProgressOrder: number,
+  ): void => {
+    const updatedTasks = tasks.map((task) => ({
+      ...task,
+      title: newTitle,
+      detail: newDetail,
+      dueDate: newDueDate,
+      progressOrder: newProgressOrder,
+    }));
+    console.log('Updated Tasks:', updatedTasks);
+    console.log(editTask)
+  };
+  
+
+  console.log('Render TaskList');
 
   return (
     <div style={styles.container}>
@@ -22,14 +74,25 @@ const TaskList = (): JSX.Element => {
         <button
           style={styles.button}
           onClick={(): void => {
-            setIsModalOpen(true) // Ditambahkan
+            setIsModalOpen(true);
+            setModalType(TASK_MODAL_TYPE.ADD);
           }}
         >
-          <span className="material-icons">add</span>Add task
+          <span className="material-icons">add</span>Add Task
         </button>
-        <button style={styles.button}>
-          <span className="material-icons">sort</span>Filter tasks
+        <button
+          style={styles.button}
+          onClick={(): void => {
+            setIsModalOpen(true);
+            setModalType(TASK_MODAL_TYPE.FILTER);
+          }}
+        >
+          <span className="material-icons">sort</span>Filter Task
         </button>
+        {isModalOpen && ( // Render TaskFilter only when isModalOpen is true
+          <TaskFilter filterType={filterType} setFilterType={setFilterType} applyFilter={(selectedFilter) => applyFilterHandler(selectedFilter)} />
+        )}
+
       </div>
       <div>
         <div style={styles.tableHead}>
@@ -38,26 +101,31 @@ const TaskList = (): JSX.Element => {
           <div style={styles.tableHeaderDueDate}>Due Date</div>
           <div style={styles.tableHeaderProgress}>Progress</div>
         </div>
-        {tasks.map((task: Task) => {
-          return <TaskListItem task={task} key={task.id} />
-        })}
+        {tasks
+        .filter((task) => {
+        if (filterType === 'completed') {
+          return task.progressOrder === TASK_PROGRESS_ID.COMPLETED;
+        } else if (filterType === 'uncompleted') {
+          return task.progressOrder !== TASK_PROGRESS_ID.COMPLETED;
+        }
+        return true;
+      })
+      .map((task) => {
+        return <TaskListItem task={task} key={task.id} />;
+      })}
       </div>
       {isModalOpen && (
         <TaskModal
-          headingTitle="Add your task"
-          type={TASK_MODAL_TYPE.ADD}
+          headingTitle={modalType === TASK_MODAL_TYPE.FILTER ? 'Filter tasks' : 'Add your task'}
+          type={modalType}
           setIsModalOpen={setIsModalOpen}
           defaultProgressOrder={TASK_PROGRESS_ID.NOT_STARTED}
-          editTask={(newTitle, newDetail, newDueDate, newProgressOrder) => {
-          // Di sini, Anda dapat mengganti taskId dengan cara mengidentifikasi task secara langsung
-          // Misalnya, dengan mencari task berdasarkan newTitle atau parameter lainnya.
-          const taskToEdit = tasks.find((task) => task.title === newTitle);
-          if (taskToEdit) {
-        editTask(taskToEdit.id, newTitle, newDetail, newDueDate, newProgressOrder);
-      }
-    }}
-  />
-)}
+          applyFilter={applyFilterHandler} //Ditambahkan
+          modalType={TASK_MODAL_TYPE}
+          onSubmit={addTaskHandler}
+          editTask={editTaskHandler}
+        />
+      )}
     </div>
   )
 }

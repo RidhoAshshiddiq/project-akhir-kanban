@@ -6,8 +6,8 @@ import {
 import { useTasksAction } from '../../hooks/Tasks';
 import { useState } from 'react';
 import TaskMenu from '../../components/shared/TaskMenu';
-import TaskModal from '../../components/shared/TaskModal'; //Ditambahkan
-import { TASK_MODAL_TYPE } from '../../../constants/app'; //Ditambahkan
+import TaskModal from '../../components/shared/TaskModal'; 
+import { TASK_MODAL_TYPE } from '../../../constants/app'; 
 
 
 interface TaskListItemProps {
@@ -63,16 +63,15 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
     newProgressOrder: number
   ): void => {
     if (task.id) {
-      editTask(task.id, newTitle, newDetail, newDueDate, newProgressOrder);
+      editTask?.(task.id, newTitle, newDetail, newDueDate, newProgressOrder);
       setIsMenuOpen(false);
       setIsEditFormOpen(false);
     }
   };
 
   const handleDeleteTask = (): void => {
-    // Lakukan operasi sebelum menghapus jika diperlukan
     deleteTask(task.id);
-    setIsMenuOpen(false); // Tutup menu setelah penghapusan
+    setIsMenuOpen(false); 
   };
 
   return (
@@ -103,9 +102,7 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
           more_horiz
         </span>
       </div>
-     {/* Ditambahkan */}
      {isMenuOpen && (
-        // <TaskMenu setIsMenuOpen={setIsMenuOpen} task={task} />
         <TaskMenu
           setIsMenuOpen={setIsMenuOpen}
           task={task}
@@ -114,18 +111,19 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
           initialDueDate={task.dueDate}
           initialProgressOrder={task.progressOrder}
           editTask={handleEditTask}
-          deleteTask={handleDeleteTask} // Tambahkan ini
-          openEditForm={() => setIsEditFormOpen(true)} // Tambahkan ini untuk membuka form edit
+          deleteTask={handleDeleteTask} 
+          openEditForm={() => setIsEditFormOpen(true)} 
         />
       )}
       {isEditFormOpen && (
         <TaskModal
           headingTitle="Edit your task"
-          type={TASK_MODAL_TYPE.EDIT} // Ubah menjadi modal edit
+          type={TASK_MODAL_TYPE.EDIT} 
           setIsModalOpen={setIsEditFormOpen}
           defaultProgressOrder={task.progressOrder}
           task={task}
           editTask={handleEditTask}
+          modalType={TASK_MODAL_TYPE}
         />
       )}
     </div>

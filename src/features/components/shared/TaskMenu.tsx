@@ -14,8 +14,8 @@ interface TaskMenuProps {
     dueDate: string,
     progressOrder: number
   ) => void;
-  openEditForm: () => void; // Tambahkan ini untuk membuka form edit
-  deleteTask: () => void; // Tambahkan prop deleteTask
+  openEditForm: () => void; 
+  deleteTask: () => void; 
 }
 
 const TaskMenu = ({
@@ -30,15 +30,14 @@ const TaskMenu = ({
   deleteTask,
 }: TaskMenuProps): JSX.Element => {
   const handleEditClick = (): void => {
-    openEditForm(); // Buka form edit saat tombol Edit diklik
+    openEditForm(); 
     setIsMenuOpen(false);
     console.log(task, initialTitle, initialDetail, initialDueDate, initialProgressOrder, editTask);
   };
 
   const handleDelete = (): void => {
-    // Lakukan operasi sebelum menghapus jika diperlukan
     deleteTask();
-    setIsMenuOpen(false); // Tutup menu setelah penghapusan
+    setIsMenuOpen(false); 
   };
 
   return (
