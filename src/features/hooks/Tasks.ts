@@ -6,14 +6,14 @@ import { TASK_PROGRESS_ID } from '../../constants/app';
 interface useTaskActionType {
   completeTask: (taskId: number) => void;
   moveTaskCard: (taskId: number, directionNumber: 1 | -1) => void;
-  // Ditambahkan
+
   addTask: (
     title: string,
     detail: string,
     dueDate: string,
     progressOrder: number,
   ) => void;
-  // Ditambahkan
+
   editTask: (
     taskId: number,
     title: string,
@@ -21,7 +21,8 @@ interface useTaskActionType {
     dueDate: string,
     progressOrder: number,
   ) => void;
-  deleteTask: (taskId: number) => void; // Tambahkan definisi deleteTask
+  deleteTask: (taskId: number) => void; 
+  filterTasks: (filterType: string) => Task[];
 }
 
 export const useTasksAction = (): useTaskActionType => {
@@ -42,7 +43,7 @@ export const useTasksAction = (): useTaskActionType => {
     setTasks(updatedTasks);
   };
 
-  // Ditambahkan
+  
   const addTask = (
     title: string,
     detail: string,
@@ -79,13 +80,25 @@ export const useTasksAction = (): useTaskActionType => {
     setTasks(updatedTasks);
   };
   
+  // Ditambahkan
+  const filterTasks = (filterType: string): Task[] => {
+    if (filterType === 'completed') {
+      return tasks.filter((task) => task.progressOrder === TASK_PROGRESS_ID.COMPLETED);
+    } else if (filterType === 'uncompleted') {
+      return tasks.filter((task) => task.progressOrder !== TASK_PROGRESS_ID.COMPLETED);
+    } else {
+      return tasks; // Tampilkan semua tugas jika filter adalah 'all'
+    }
+  };
+
 
  
   return {
     completeTask,
     moveTaskCard,
-    addTask, // Ditambahkan
-    editTask, //Ditambahkan
-    deleteTask, //Ditambahkan
+    addTask, 
+    editTask, 
+    deleteTask, 
+    filterTasks, // Ditambahkan
   };
 };
