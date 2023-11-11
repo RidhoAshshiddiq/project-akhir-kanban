@@ -63,7 +63,10 @@ const TaskModal = ({
   console.log('modalType:', modalType); // Tambahkan log ini
 
   return (
-    <div style={styles.container}>
+    <div 
+    style={styles.container}
+    data-testid="task-modal"
+    >
       <div style={styles.modalTop}>
         <h1>{headingTitle}</h1>
         <span
@@ -72,17 +75,20 @@ const TaskModal = ({
           onClick={() => {
             setIsModalOpen(false);
           }}
+          data-testid="close-modal-button" // Ditambahkan
         >
           close
         </span>
       </div>
       {type === TASK_MODAL_TYPE?.FILTER ? (
         // Tampilkan konten filterTasks jika jenis modal adalah filter
+        <div data-testid="task-filter"> {/* Tambahkan ini */}
         <TaskFilter
           filterType={filterType}
           setFilterType={setFilterType}
           applyFilter={applyFilter || (() => {})} // Tambahkan pengecekan di sini
         />
+        </div>
       ) : (
         // Tampilkan konten TaskForm jika jenis modal bukan filter
         <TaskForm

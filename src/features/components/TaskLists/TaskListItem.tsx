@@ -5,8 +5,8 @@ import {
 } from '../../../constants/app';
 import { useTasksAction } from '../../hooks/Tasks';
 import { useState } from 'react';
-import TaskMenu from '../../components/shared/TaskMenu';
-import TaskModal from '../../components/shared/TaskModal'; 
+import TaskMenu from '../shared/TaskMenu';
+import TaskModal from '../shared/TaskModal'; 
 import { TASK_MODAL_TYPE } from '../../../constants/app'; 
 
 
@@ -75,29 +75,51 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
   };
 
   return (
-    <div style={styles.tableBody}>
+    <div style={styles.tableBody}
+      data-testid="task-list-item" // Ditambahkan
+      >
       <div style={styles.taskTitleContainer}>
-        <span
+          <span
           className="material-icons"
           style={getIconStyle(task.progressOrder)}
           onClick={handleCompleteTask}
-        >
+          >
           check_circle
-        </span>
-        <div style={styles.taskTitle}>{task.title}</div>
+          </span>
+          <div 
+            style={styles.taskTitle}
+            data-testid="title-input" 
+            >
+            {task.title}
+          </div>
+        </div>
+      <div 
+      style={styles.tableBodyDetail}
+      data-testid="detail-input"
+      >
+      {task.detail}
       </div>
-      <div style={styles.tableBodyDetail}>{task.detail}</div>
-      <div style={styles.tableBodyDueDate}>{task.dueDate}</div>
-      <div style={styles.tableBodyProgress}>
-        {getProgressCategory(task.progressOrder)}
+      <div 
+      style={styles.tableBodyDueDate}
+      data-testid="due-date-input"
+      >
+      {task.dueDate}
       </div>
-      <div style={styles.menuIconContainer}>
+      <div 
+      style={styles.tableBodyProgress}
+      data-testid="progress-select"
+      >
+      {getProgressCategory(task.progressOrder)}
+      </div>
+      <div 
+        style={styles.menuIconContainer}>
         <span
           className="material-icons"
           style={styles.menuIcon}
           onClick={(): void => {
             setIsMenuOpen(true);
           }}
+          data-testid="task-menu-button" // Ditambahkan
         >
           more_horiz
         </span>

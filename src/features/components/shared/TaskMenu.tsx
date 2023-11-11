@@ -41,11 +41,21 @@ const TaskMenu = ({
   };
 
   return (
-    <div style={styles.menu}>
-      <div style={styles.menuItem} onClick={handleEditClick}>
+    <div style={styles.menu}
+    data-testid="task-menu" // Ditambahkan
+    >
+      <div 
+        style={styles.menuItem} 
+        onClick={handleEditClick}
+        data-testid="edit-button"
+        >
         <span className="material-icons">edit</span>Edit
       </div>
-      <div style={styles.menuItem} onClick={handleDelete}>
+      <div 
+        style={styles.menuItem} 
+        onClick={handleDelete}
+        data-testid="delete-button" //Ditambahkkan
+        >
         <span 
         className="material-icons">delete</span>Delete
       </div>

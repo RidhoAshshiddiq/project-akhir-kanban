@@ -127,6 +127,7 @@ const TaskForm = ({ type, defaultProgressOrder, setIsModalOpen, task}: TaskFormP
         onClick={(): void => {
           handleSubmit() 
         }}
+        data-testid="task-modal-submit-button"
       >
         Submit
       </button>

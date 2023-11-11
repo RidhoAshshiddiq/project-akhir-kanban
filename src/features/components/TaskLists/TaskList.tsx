@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 import { tasksState } from '../../tasks/TaskAtoms'
 import TaskListItem from './TaskListItem'
 import type { Task, CSSProperties } from '../../../types'
-import TaskModal from '../../components/shared/TaskModal' 
+import TaskModal from '../shared/TaskModal' 
 import { TASK_PROGRESS_ID, TASK_MODAL_TYPE} from '../../../constants/app' 
 import { useTasksAction } from '../../hooks/Tasks'; 
 import TaskFilter from '../shared/TaskFilter'; // Import TaskFilter
@@ -77,6 +77,7 @@ const TaskList = (): JSX.Element => {
             setIsModalOpen(true);
             setModalType(TASK_MODAL_TYPE.ADD);
           }}
+          data-testid="add-task-button" // Ditambahkan
         >
           <span className="material-icons">add</span>Add Task
         </button>
@@ -86,6 +87,7 @@ const TaskList = (): JSX.Element => {
             setIsModalOpen(true);
             setModalType(TASK_MODAL_TYPE.FILTER);
           }}
+          data-testid="filter-task-button" // Ditambahkan
         >
           <span className="material-icons">sort</span>Filter Task
         </button>
