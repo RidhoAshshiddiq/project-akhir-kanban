@@ -42,7 +42,8 @@ const TaskColumn: React.FC<TaskColumnProps> = ({ columnTitle, tasks, moveTaskCar
       {isModalOpen && (
         <TaskModal
           headingTitle="Add your task"
-          type={TASK_MODAL_TYPE.ADD} // Ditambahkan
+          type={TASK_MODAL_TYPE.ADD} 
+          modalType={TASK_MODAL_TYPE.ADD}
           setIsModalOpen={setIsModalOpen}
           defaultProgressOrder={defaultProgressOrder}
           editTask={(newTitle, newDetail, newDueDate, newProgressOrder) => {

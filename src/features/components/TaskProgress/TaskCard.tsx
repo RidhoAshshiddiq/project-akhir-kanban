@@ -112,7 +112,6 @@ const TaskCard = ({ task, moveTaskCard, completeTask }: TaskCardProps): JSX.Elem
           </button>
         )}
       </div>
-      {/* Ditambahkan */}
       {isMenuOpen && (
         // <TaskMenu setIsMenuOpen={setIsMenuOpen} task={task} />
         <TaskMenu
@@ -123,18 +122,20 @@ const TaskCard = ({ task, moveTaskCard, completeTask }: TaskCardProps): JSX.Elem
           initialDueDate={task.dueDate}
           initialProgressOrder={task.progressOrder}
           editTask={handleEditTask}
-          deleteTask={handleDeleteTask} // Tambahkan ini
-          openEditForm={() => setIsEditFormOpen(true)} // Tambahkan ini untuk membuka form edit
+          deleteTask={handleDeleteTask} 
+          openEditForm={() => setIsEditFormOpen(true)}
+          modalType={TASK_MODAL_TYPE.EDIT}
         />
       )}
       {isEditFormOpen && (
         <TaskModal
           headingTitle="Edit your task"
-          type={TASK_MODAL_TYPE.EDIT} // Ubah menjadi modal edit
+          type={TASK_MODAL_TYPE.EDIT}
           setIsModalOpen={setIsEditFormOpen}
           defaultProgressOrder={task.progressOrder}
           task={task}
           editTask={handleEditTask}
+          modalType={TASK_MODAL_TYPE.EDIT}
         />
       )}
     </div>

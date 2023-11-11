@@ -1,8 +1,9 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { Task, CSSProperties } from '../../../types';
 import TaskForm from './TaskForm';
-import TaskFilter from './TaskFilter'; // Import FilterTasksModal
+import TaskFilter from './TaskFilter';
 import {TASK_MODAL_TYPE} from '../../../constants/app'; 
+import type { TaskModalType } from '../../../constants/app';
 
 interface TaskModalProps {
   headingTitle: string;
@@ -18,7 +19,7 @@ interface TaskModalProps {
   ) => void;
   // Ditambahkan
   applyFilter?: (selectedFilter: string) => void; 
-  modalType: typeof TASK_MODAL_TYPE; // Tambahkan properti TASK_MODAL_TYPE
+  modalType: TaskModalType;
   filterType?: string; // Tambahkan properti filterType
   setFilterType?: Dispatch<SetStateAction<string>> | undefined; // Tambahkan properti setFilterType
   onSubmit?: (
@@ -50,9 +51,9 @@ const TaskModal = ({
     newProgressOrder: number
   ): void => {
     console.log('Handling form submit in TaskModal with type:', type);
-    if (type === modalType.FILTER) {
+    if (modalType === TASK_MODAL_TYPE.FILTER) {
       applyFilter?.(newTitle); 
-    } else if (type === modalType.ADD || (task && type === TASK_MODAL_TYPE.EDIT)) {
+    } else if (modalType === TASK_MODAL_TYPE.ADD || (task && type === TASK_MODAL_TYPE.EDIT)) {
       editTask?.(newTitle, newDetail, newDueDate, newProgressOrder);
     }
     onSubmit?.(newTitle, newDetail, newDueDate, newProgressOrder); 

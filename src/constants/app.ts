@@ -14,7 +14,9 @@ export const TASK_PROGRESS_STATUS = {
 
   // Ditambahkan
 export const TASK_MODAL_TYPE = {
-  ADD: 'add',
-  EDIT: 'edit',
-  FILTER: 'filter',
+  ADD: 'add' as const,
+  EDIT: 'edit' as const,
+  FILTER: 'filter' as const,
 } 
+
+export type TaskModalType = typeof TASK_MODAL_TYPE[keyof typeof TASK_MODAL_TYPE];

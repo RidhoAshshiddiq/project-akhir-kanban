@@ -16,6 +16,7 @@ interface TaskMenuProps {
   ) => void;
   openEditForm: () => void; 
   deleteTask: () => void; 
+  modalType: string; 
 }
 
 const TaskMenu = ({
