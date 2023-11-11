@@ -7,6 +7,8 @@ import TaskModal from '../shared/TaskModal'
 import { TASK_PROGRESS_ID, TASK_MODAL_TYPE} from '../../../constants/app' 
 import { useTasksAction } from '../../hooks/Tasks'; 
 import TaskFilter from '../shared/TaskFilter'; // Import TaskFilter
+import type { TaskModalType } from '../../../constants/app';
+
 
 const TaskList = (): JSX.Element => {
   const tasks: Task[] = useRecoilValue(tasksState)
@@ -119,11 +121,11 @@ const TaskList = (): JSX.Element => {
       {isModalOpen && (
         <TaskModal
           headingTitle={modalType === TASK_MODAL_TYPE.FILTER ? 'Filter tasks' : 'Add your task'}
-          type={modalType}
+          type={modalType as TaskModalType}
           setIsModalOpen={setIsModalOpen}
           defaultProgressOrder={TASK_PROGRESS_ID.NOT_STARTED}
           applyFilter={applyFilterHandler} //Ditambahkan
-          modalType={TASK_MODAL_TYPE}
+          modalType={modalType as TaskModalType}
           onSubmit={addTaskHandler}
           editTask={editTaskHandler}
         />

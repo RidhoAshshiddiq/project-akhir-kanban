@@ -135,6 +135,7 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
           editTask={handleEditTask}
           deleteTask={handleDeleteTask} 
           openEditForm={() => setIsEditFormOpen(true)} 
+          modalType={TASK_MODAL_TYPE.EDIT}
         />
       )}
       {isEditFormOpen && (
@@ -145,7 +146,7 @@ const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
           defaultProgressOrder={task.progressOrder}
           task={task}
           editTask={handleEditTask}
-          modalType={TASK_MODAL_TYPE}
+          modalType={TASK_MODAL_TYPE.EDIT}
         />
       )}
     </div>
